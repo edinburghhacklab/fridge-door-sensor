@@ -29,6 +29,7 @@
 
 static constexpr uint64_t ONE_S = 1000 * 1000ULL;
 static constexpr unsigned int DOOR_GPIO = 14;
+static constexpr unsigned int LED_GPIO = 15;
 static uint64_t open_at_us = 0;
 static uint64_t open_s = 0;
 static uint64_t last_open_s = 0;
@@ -46,6 +47,8 @@ static String device_id;
 
 void setup() {
 	pinMode(DOOR_GPIO, INPUT_PULLDOWN);
+	pinMode(LED_GPIO, OUTPUT);
+	digitalWrite(LED_GPIO, LOW);
 
 	device_id = String("fridge-door-sensor_") + String(ESP.getEfuseMac(), HEX);
 
@@ -135,4 +138,6 @@ void loop() {
 		}
 		last_publish_us = esp_timer_get_time();
 	}
+
+	digitalWrite(LED_GPIO, door_open ? HIGH : LOW);
 }
